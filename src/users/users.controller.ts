@@ -15,7 +15,6 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
   findAll(@Query() paginationquery: PaginationQueryDto) {
-    console.log('controller...........findAll');
     return this.userService.findAll(paginationquery);
   }
   
@@ -23,7 +22,6 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
   findOne(@Param('id') id: number) {
-    console.log('controller...........findOne');
     return this.userService.findOne(id);
   }
 }

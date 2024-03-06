@@ -20,7 +20,6 @@ export class AuthController {
     const user = (await this.authService.login(loginUserDto)) as Users;
     if (user) {
       const authToken = this.authService.generateToken(user.id);
-      console.log('authToken', authToken);
       res.setHeader('authorization', authToken);
     }
     return res.status(HttpStatus.OK).send(user);

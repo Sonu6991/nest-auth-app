@@ -27,7 +27,6 @@ export class AuthGaurd implements CanActivate {
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as Jwtdata;
     const user = await this.userService.findOne(decoded.userId);
-    console.log('user?????????????', user);
     req['user'] = user;
     return true;
   }
