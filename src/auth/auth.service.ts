@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -12,11 +13,19 @@ import { LoginUserDto } from 'src/dto/user/login-user.dto';
 import { Users } from 'src/entities/users.entity.ts';
 import { Repository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+// import { RedisStore } from 'cache-manager-redis-store';
+// import { RedisClientType } from 'redis';
 @Injectable()
 export class AuthService {
+  // private readonly redisClient: RedisClientType;
   constructor(
     @InjectRepository(Users) private readonly userRepositoty: Repository<Users>,
-  ) {}
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+  ) {
+    // const redisStore = cache.store as unknown as RedisStore;
+    // this.redisClient = redisStore.getClient();
+  }
 
   generateToken(userId: number): string {
     const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -62,6 +71,10 @@ export class AuthService {
         () => new BadRequestException('Password does not match'),
       );
     }
+
+    const authToken = this.generateToken(existedUser.id);
+    existedUser['authToken'] = authToken;
+    this.cache.set(`userId${existedUser.id}`, authToken, 60000);
     return existedUser;
   }
 }
