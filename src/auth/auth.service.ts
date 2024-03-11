@@ -21,7 +21,7 @@ export class AuthService {
   // private readonly redisClient: RedisClientType;
   constructor(
     @InjectRepository(Users) private readonly userRepositoty: Repository<Users>,
-    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+    // @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {
     // const redisStore = cache.store as unknown as RedisStore;
     // this.redisClient = redisStore.getClient();
@@ -74,7 +74,7 @@ export class AuthService {
 
     const authToken = this.generateToken(existedUser.id);
     existedUser['authToken'] = authToken;
-    this.cache.set(`userId${existedUser.id}`, authToken, 60000);
+    // this.cache.set(`userId${existedUser.id}`, authToken, 60000);
     return existedUser;
   }
 }

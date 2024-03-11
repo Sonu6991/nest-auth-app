@@ -20,7 +20,7 @@ export class AuthGaurd implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly userService: UsersService,
-    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+    // @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.get(IS_PUBLIC_KEY, context.getHandler());
@@ -35,8 +35,8 @@ export class AuthGaurd implements CanActivate {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as Jwtdata;
     const user = await this.userService.findOne(decoded.userId);
-    const catchedToken = await this.cache.get(`userId${user.id}`);
-    console.log('catchedToken', catchedToken);
+    // const catchedToken = await this.cache.get(`userId${user.id}`);
+    // console.log('catchedToken', catchedToken);
     req['user'] = user;
     return true;
   }

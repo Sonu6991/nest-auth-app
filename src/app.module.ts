@@ -27,7 +27,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    CacheModule.registerAsync(RedisOptions),
+    // CacheModule.registerAsync(RedisOptions),
     UsersModule,
     AuthModule,
   ],

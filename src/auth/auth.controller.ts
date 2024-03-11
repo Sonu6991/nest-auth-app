@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('auth')
-@UseInterceptors(CacheInterceptor)
+// @UseInterceptors(CacheInterceptor)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
