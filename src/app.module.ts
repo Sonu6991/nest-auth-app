@@ -8,20 +8,39 @@ import { UsersModule } from './users/users.module';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { RedisOptions } from './common/configs/redis-options';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
+    ClientsModule.registerAsync([
+      {
+        name: 'coffessService',
+        imports: [ConfigModule],
+        useFactory: (configService: ConfigService) => {
+          return {
+            transport: Transport.TCP,
+            options: {
+              host: 'localhost',
+              port: +configService.get('COFEES_SERVICE_PORT'),
+            },
+          };
+        },
+        inject: [ConfigService],
+      },
+    ]),
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        database: process.env.DB_NAME,
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        port: +process.env.DB_PORT,
-        host: process.env.DB_HOST,
+        database: configService.get('DB_NAME'),
+        username: configService.get('DB_USER'),
+        password: configService.get('DB_PASSWORD'),
+        port: +configService.get('DB_PORT'),
+        host: configService.get('DB_HOST'),
         synchronize: true,
         autoLoadEntities: true,
       }),
+      inject: [ConfigService],
     }),
     ConfigModule.forRoot({
       isGlobal: true,
